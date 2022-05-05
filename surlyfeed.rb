@@ -32,7 +32,8 @@ def fetch_and_parse
 
     feed = []
 
-    rows = doc.css("li[class='entry']")
+    rows = doc.css("li[class='entry highlight']")
+    rows += doc.css("li[class='entry']")
 
     rows.each do |row|
       header = row.css("h2[class='title']").first
