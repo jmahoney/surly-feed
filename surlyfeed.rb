@@ -1,36 +1,33 @@
-require "nokogiri"
-require "httparty"
-require "sinatra"
+require "oga"
 require "date"
+require "net/http"
+require "json"
 
-items = []
-last_fetched = Date.today - 7
+def feed(event:, context:)
+  begin
+    feed = fetch_and_parse()
 
-get "/" do
-  if  items.empty? || last_fetched < DateTime.now - 0.5
-    items = fetch_and_parse
-    last_fetched = DateTime.now
+    {
+      statusCode: 200,
+      headers: { "content-type": "application/json; charset=utf-8" },
+      body: feed.to_json
+    }
+  rescue
+    puts e.message
+    puts e.backtrace.inspect
+    { statusCode: 400, body: JSON.generate("Something went wrong") }
   end
-
-  feed = {
-    version: "https://jsonfeed.org/version/1",
-    title: "Surly Bikes Feed",
-    home_page_url: "https://surlybikes.com/blog",
-    feed_url: "http://surly-feed.cheerschopper.com",
-    items: items
-  }
-
-  content_type "application/json"
-  feed.to_json
 end
 
 def fetch_and_parse
-  response = HTTParty.get("https://surlybikes.com/blog")
+  uri = URI("https://surlybikes.com/blog")
+  response = Net::HTTP.get_response(uri)
 
-  if response.success?
-    doc = Nokogiri.HTML(response.body)
+  if response.code == "200"
 
-    feed = []
+    doc = Oga.parse_html(response.body.force_encoding("UTF-8").encode("UTF-8"))
+
+    items = []
 
     rows = doc.css("li[class='entry highlight']")
     rows += doc.css("li[class='entry']")
@@ -42,15 +39,25 @@ def fetch_and_parse
       date = row.css("span[class='date']").first
       author = row.css("span[class='author']").first
       hero_image = row.css("img").first
-      html = "#{author.to_html} #{date.to_html} <br/ ><br /> #{hero_image.to_html}"
-      feed << {id: permalink, url: permalink, content_html: html, title: title, date_published: DateTime.parse(date.text).to_s}
+      html = "#{author} #{date} <br/ ><br /> #{hero_image}"
+      items << {id: permalink, url: permalink, content_html: html, title: title, date_published: DateTime.parse(date.text).to_s}
     end
 
-    return feed
+
+    return {
+      version: "https://jsonfeed.org/version/1",
+      title: "Surly Bikes Feed",
+      home_page_url: "https://surlybikes.com/blog",
+      feed_url: "http://surly-feed.cheerschopper.com",
+      items: items
+    }
+
+  else
+    return {}
   end
-
-
 end
+
+
 
 
 
