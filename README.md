@@ -6,7 +6,7 @@ You can subscribe to the feed at http://surly-feed.cheerschopper.com
 
 ### Why not the full content of the blog
 
-1) Scaping the first page of the blog was easy. Following all the links and getting the content is actual fucking work.
+1) Scaping the first page of the blog was easy. Following all the links and getting the content is actual, y'know, _work_.
 2) I haven't asked Surly's permission to do this so I'm not really comfortable scraping their whole blog.
 
 ### Why JSON Feed?
