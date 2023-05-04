@@ -2,7 +2,7 @@
 
 This is a quick and dirty scrape of the [Surly Bikes Blog](https://surlybikes.com/blog) converted to the [JSON Feed](https://jsonfeed.org) format.
 
-You can subscribe to the feed at http://surly-feed.cheerschopper.com
+You can subscribe to the feed at https://surly-feed.cheerschopper.com
 
 ### Why not the full content of the blog
 
@@ -12,7 +12,7 @@ You can subscribe to the feed at http://surly-feed.cheerschopper.com
 ### Why JSON Feed?
 It was the easiest to implement. Ruby and JSON are extremely compatible.
 
-[Validate the feed](https://validator.jsonfeed.org/?url=http%3A%2F%2Fsurly-feed.cheerschopper.com)
+[Validate the feed](https://validator.jsonfeed.org/?url=https%3A%2F%2Fsurly-feed.cheerschopper.com)
 
 ## Contributing
 
